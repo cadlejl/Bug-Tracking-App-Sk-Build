@@ -1,3 +1,4 @@
+/*** Shared Module ***/
 "use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -9,18 +10,22 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
-var AppComponent = (function () {
-    function AppComponent() {
+var common_1 = require('@angular/common');
+var SharedModule = (function () {
+    function SharedModule() {
     }
-    AppComponent = __decorate([
-        core_1.Component({
-            selector: 'my-app',
-            template: "\n        <navbar></navbar>\n        <div class=\"container\">\n            <router-outlet></router-outlet>\n        </div>\n    ",
-            styles: ["\n        .container {\n            margin-top: 5rem;\n        }\n    "]
+    SharedModule = __decorate([
+        core_1.NgModule({
+            // Modules: for use in this module (not required for export)
+            imports: [common_1.CommonModule],
+            // Directives (pipes, components) for use in this module, or export
+            declarations: [],
+            // Make modules and directives available to other modules
+            exports: [common_1.CommonModule]
         }), 
         __metadata('design:paramtypes', [])
-    ], AppComponent);
-    return AppComponent;
+    ], SharedModule);
+    return SharedModule;
 }());
-exports.AppComponent = AppComponent;
-//# sourceMappingURL=app.component.js.map
+exports.SharedModule = SharedModule;
+//# sourceMappingURL=shared.module.js.map
