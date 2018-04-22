@@ -20,7 +20,7 @@ var BugListComponent = (function () {
     }
     BugListComponent.prototype.ngOnInit = function () {
         this.getAddedBugs();
-        // this.getUpdatedBugs();
+        this.getUpdatedBugs();
     };
     BugListComponent.prototype.getAddedBugs = function () {
         var _this = this;
@@ -31,9 +31,20 @@ var BugListComponent = (function () {
         function (bug) {
             // Pushing newBug from BugService onto bugs, which is a Bug array.
             _this.bugs.push(bug);
-            console.log(_this.bugs); // REMOVE
         }, function (err) {
             console.error("Unable to get added bug - ", err);
+        });
+    };
+    // Lecture 125
+    BugListComponent.prototype.getUpdatedBugs = function () {
+        var _this = this;
+        this.bugService.changedListener().subscribe(function (updatedBug) {
+            // .map iterates through every element in the array and returns 
+            // everything it finds as an array.
+            var bugIndex = _this.bugs.map(function (index) { return index.id; }).indexOf(updatedBug['id']);
+            _this.bugs[bugIndex] = updatedBug;
+        }, function (err) {
+            console.error("Unable to get updated bug - ", err);
         });
     };
     BugListComponent = __decorate([

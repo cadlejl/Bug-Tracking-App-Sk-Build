@@ -6,11 +6,8 @@
         <button 
             class="btn btn-success btn-lg" 
             [attr.data-target]=" '#' + bugDetail.modalId" 
-            data-toggle="modal">
-        <!-- 
-            (click)="bugDetail.freshForm()"
-        -->
-
+            data-toggle="modal"
+            (click)="bugDetail.freshForm()">
             <i class="fa fa-plus" aria-hidden="true"></i>
             Add Bug
         </button>
@@ -31,21 +28,22 @@
             </thead>
             <tbody>
                 <tr
+                    class="bugRow"
                     *ngFor="let bug of bugs" 
                     [attr.data-target]=" '#' + bugDetail.modalId" 
-                    data-toggle="modal">
+                    data-toggle="modal"
+                    (click)="bugDetail.configureForm(bug)">
                 <!-- data-target (Bootstrap) is like a click event.
                     attr. is Angular.
-                    
-                    (click)="bugDetail.configureForm(bug)"
+                    The click event solves the two way data binding problem.
                 -->
 
                     <td>{{ bug.title }}</td>
-                    <td>{{ bug.status }}</td><!-- | status-->
-                    <td>{{ bug.severity }}</td><!-- | severity-->
+                    <td>{{ bug.status | status }}</td>
+                    <td>{{ bug.severity | severity }}</td>
                     <td>{{ bug.description }}</td>
                     <td>{{ bug.createdBy }}</td>
-                    <td>{{ bug.createdDate }}</td><!-- | date-->
+                    <td>{{ bug.createdDate | date }}</td>
                 </tr>
             </tbody>
         </table>

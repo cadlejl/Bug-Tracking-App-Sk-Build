@@ -39,7 +39,12 @@ var BugService = (function () {
                 the data model.*/
                 // Cast to data model then replace bug.val() with custom object.
                 var newBug = bug.val();
-                //newBug.id = bug.key;
+                // firebase child key for editing existing bugs. It's 
+                // undesirable to pass the id back up to firebase with 
+                // the bug because we don't want to save the id within
+                // the object in firebase (two instances of it). We just
+                // need the reference.
+                newBug.id = bug.key;
                 // Presumably could have just done "as Bug" here.
                 obs.next(newBug /*bug.val()*/);
             }, function (err) {
@@ -47,18 +52,20 @@ var BugService = (function () {
             });
         });
     };
-    // changedListener(): Observable<any> {
-    //     return Observable.create(obs => {
-    //         this.bugsDbRef.on('child_changed', bug => {
-    //             const updatedBug = bug.val() as Bug;
-    //             updatedBug.id = bug.key;
-    //             obs.next(updatedBug);
-    //         },
-    //         err => {
-    //             obs.throw(err);
-    //         });
-    //     });
-    // }
+    // Once false edit issue was solved, we add this method to bring in actual 
+    // changes. Same or similar syntax to getAddedBugs().
+    BugService.prototype.changedListener = function () {
+        var _this = this;
+        return Observable_1.Observable.create(function (obs) {
+            _this.bugsDbRef.on('child_changed', function (bug) {
+                var updatedBug = bug.val();
+                updatedBug.id = bug.key;
+                obs.next(updatedBug);
+            }, function (err) {
+                obs.throw(err);
+            });
+        });
+    };
     // Called by BugDetailComponent.addBug(this.currentBug).
     /* So . . . I think this is taking our current database reference
     (bugsDbRef (snapshot)), which holds a new child with unique identifier,
@@ -79,6 +86,15 @@ var BugService = (function () {
             createdBy: 'Jaime',
             createdDate: Date.now() // Epoch time
         }).catch(function (err) { return console.error("Unable to add bug to Firebase - ", err); });
+    };
+    // Linking bug.id to the firebase key in getAddedBugs() allows this method
+    BugService.prototype.updateBug = function (bug) {
+        var currentBugRef = this.bugsDbRef.child(bug.id);
+        // So not to pass the id back to firebase
+        bug.id = null;
+        bug.updatedBy = "Tom Tickle";
+        bug.updatedDate = Date.now();
+        currentBugRef.update(bug);
     };
     BugService = __decorate([
         core_1.Injectable(), 

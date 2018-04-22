@@ -44,7 +44,12 @@ export class BugService {
                         // Cast to data model then replace bug.val() with custom object.
                         const newBug = bug.val() as Bug;
                     
-                        //newBug.id = bug.key;
+                        // firebase child key for editing existing bugs. It's 
+                        // undesirable to pass the id back up to firebase with 
+                        // the bug because we don't want to save the id within
+                        // the object in firebase (two instances of it). We just
+                        // need the reference.
+                        newBug.id = bug.key;
 
                         // Presumably could have just done "as Bug" here.
                         obs.next(newBug /*bug.val()*/);
@@ -57,18 +62,22 @@ export class BugService {
         );
     }
 
-    // changedListener(): Observable<any> {
-    //     return Observable.create(obs => {
-    //         this.bugsDbRef.on('child_changed', bug => {
-    //             const updatedBug = bug.val() as Bug;
-    //             updatedBug.id = bug.key;
-    //             obs.next(updatedBug);
-    //         },
-    //         err => {
-    //             obs.throw(err);
-    //         });
-    //     });
-    // }
+    // Once false edit issue was solved, we add this method to bring in actual 
+    // changes. Same or similar syntax to getAddedBugs().
+    changedListener(): Observable<any> {
+        return Observable.create(obs => {
+            this.bugsDbRef.on(
+                'child_changed', 
+                bug => {
+                const updatedBug = bug.val() as Bug;
+                updatedBug.id = bug.key;
+                obs.next(updatedBug);
+            },
+            err => {
+                obs.throw(err);
+            });
+        });
+    }
 
     // Called by BugDetailComponent.addBug(this.currentBug).
     /* So . . . I think this is taking our current database reference 
@@ -95,11 +104,15 @@ export class BugService {
         );
     }
 
-    // updateBug(bug: Bug) {
-    //     const currentBugRef = this.bugsDbRef.child(bug.id);
-    //     bug.id = null;
-    //     bug.updatedBy = "Tom Tickle";
-    //     bug.updatedDate = Date.now();
-    //     currentBugRef.update(bug);
-    // }
+    // Linking bug.id to the firebase key in getAddedBugs() allows this method
+    updateBug(bug: Bug) {
+        const currentBugRef = this.bugsDbRef.child(bug.id);
+
+        // So not to pass the id back to firebase
+        bug.id = null;
+        
+        bug.updatedBy = "Tom Tickle";
+        bug.updatedDate = Date.now();
+        currentBugRef.update(bug);
+    }
 }

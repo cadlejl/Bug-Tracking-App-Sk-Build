@@ -1,6 +1,6 @@
 <!-- id to be target in modal trigger elements. Set property in bug-detail 
     to bind as id. -->
-<div class="modal fade" [id]="modalId"><!--  data-backdrop="static"-->
+<div class="modal fade" [id]="modalId" data-backdrop="static">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
 
@@ -8,10 +8,11 @@
                 ngSubmit = Angular event binding (deleted).
 
             -->
-            <form [formGroup]="bugForm" #form>
+            <form [formGroup]="bugForm">
                 <!-- COOL TRICK
-                    Displays form state — -->
-                    state: {{ form.className }}
+                    With #form template reference variable
+                    this displays form state — 
+                    state: {{ form.className }}-->
                 
                 <div class="modal-body">
                     <fieldset class="form-inline">
@@ -36,15 +37,13 @@
                                 Status
                             </label>
                             <select 
-                            id="status-dropdown" 
-                            class="form-control btn btn-primary"
-                            formControlName="status">
-
-                                <!--option 
+                                id="status-dropdown" 
+                                class="form-control btn btn-primary"
+                                formControlName="status">
+                                <option 
                                     *ngFor="let status of statusArr" 
                                     [value]="status">{{ statuses[status] }}
-                                </option-->
-                                <option value="1">Logged</option><!--Romove-->
+                                </option>
                             </select>
                         </div>
                     </fieldset>
@@ -60,13 +59,11 @@
                             id="severity-dropdown" 
                             class="form-control"
                             formControlName="severity">
-
-                            <!--option 
+                            <option 
                                 *ngFor="let severity of severityArr" 
                                 [value]="severity">
                                 {{ severities[severity] }}
-                            </option-->
-                            <option value="1">Severe</option><!--Romove-->
+                            </option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -95,9 +92,10 @@
                         class="btn btn-success btn-xl"
                         type="submit"  
                         data-dismiss="modal"
-                        (click)="submitForm()">
+                        (click)="submitForm()"
+                        [disabled]="bugForm.invalid">
                         <!--submitForm() method in bug-detail component
-                        [disabled]="bugForm.invalid"
+                        
                         -->
                         Save
                     </button>

@@ -11,6 +11,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var common_1 = require('@angular/common');
+var status_pipe_1 = require('./pipe/status.pipe');
+var severity_pipe_1 = require('./pipe/severity.pipe');
 var SharedModule = (function () {
     function SharedModule() {
     }
@@ -19,9 +21,16 @@ var SharedModule = (function () {
             // Modules: for use in this module (not required for export)
             imports: [common_1.CommonModule],
             // Directives (pipes, components) for use in this module, or export
-            declarations: [],
+            declarations: [
+                status_pipe_1.StatusPipe,
+                severity_pipe_1.SeverityPipe
+            ],
             // Make modules and directives available to other modules
-            exports: [common_1.CommonModule]
+            exports: [
+                common_1.CommonModule,
+                status_pipe_1.StatusPipe,
+                severity_pipe_1.SeverityPipe
+            ]
         }), 
         __metadata('design:paramtypes', [])
     ], SharedModule);
